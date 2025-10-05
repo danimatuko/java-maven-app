@@ -1,25 +1,28 @@
 pipeline {
     agent any
-    parameters {
-        string(name: 'BRANCH', defaultValue: 'main', description: 'Git branch to build')
-        choice(name: 'ENV', choices: ['staging', 'prod'], description: 'Deployment environment')
-        booleanParam(name: 'RUN_TESTS', defaultValue: true, description: 'Run tests before deploy?')
+    environment {
+        APP_NAME = 'my-app'
     }
     stages {
-        stage('Build') {
+        stage('Setup') {
             steps {
-                echo "Building branch ${params.BRANCH}"
+                script {
+                    utils = load 'scripts/utils.groovy'
+                }
             }
         }
-        stage('Test') {
-            when { expression { params.RUN_TESTS } }
+        stage('Build') {
             steps {
-                echo "Running tests..."
+                script {
+                    utils.buildProject()
+                }
             }
         }
         stage('Deploy') {
             steps {
-                echo "Deploying to ${params.ENV}"
+                script {
+                    utils.deployProject('staging')
+                }
             }
         }
     }
