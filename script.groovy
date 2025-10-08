@@ -1,3 +1,8 @@
+#!/usr/bin/env groovy
+// NOTE: The logic in this file has been moved to the Jenkins shared library
+// Functions like buildJar(), buildImage(), and deployApp() are now available as global steps
+// This file is kept here only for reference
+
 def buildJar() {
     echo 'building the application...'
     sh 'mvn package'
