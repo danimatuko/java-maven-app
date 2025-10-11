@@ -10,6 +10,10 @@ pipeline {
         maven 'maven-3.9'
     }
 
+    parameters {
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag')
+    }
+
     stages {
         stage('Build JAR') {
             steps {
@@ -19,7 +23,7 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                buildImage() // step provided by shared library
+                buildImage("danimatuko/demo-app:${params.IMAGE_TAG}")  // pass dynamic tag
             }
         }
 
