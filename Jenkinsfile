@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-@Library('shared-lib') _  // 'shared-lib' = name from Jenkins Global Libraries config
+@Library('shared-lib') _
 
 pipeline {
     agent any
@@ -21,9 +21,21 @@ pipeline {
             }
         }
 
-        stage('Build Image') {
+        stage('Build Docker Image') {
             steps {
-                buildImage("${params.IMAGE_NAME}:${params.IMAGE_TAG}")  // full image name from parameters
+                dockerBuildImage("${params.IMAGE_NAME}:${params.IMAGE_TAG}")
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                dockerLogin()
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                dockerPush("${params.IMAGE_NAME}:${params.IMAGE_TAG}")
             }
         }
 
