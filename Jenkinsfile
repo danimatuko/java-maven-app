@@ -5,6 +5,7 @@ library identifier: 'shared-lib@main', retriever: modernSCM(
    remote: 'https://github.com/danimatuko/jenkins-shared-library.git',
    credentialsId: 'github-credentials'])
 
+
 pipeline {
     agent any
 
@@ -18,6 +19,13 @@ pipeline {
     }
 
     stages {
+
+        stage('Webhook Test') {
+            steps {
+                echo "If the job triggered automatically after the push, then it worked!"
+            }
+        }
+
         stage('Build JAR') {
             steps {
                 buildJar()
