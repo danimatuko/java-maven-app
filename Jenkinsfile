@@ -8,7 +8,6 @@ pipeline {
             steps {
                 script {
                     utils = load 'scripts/utils.groovy'
-                    echo 'Test webhook for multibranch pipeline'
                 }
             }
         }
