@@ -9,6 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building branch ${params.BRANCH}"
+                echo 'Test webhook for multibranch pipeline (another branch)'
             }
         }
         stage('Test') {
