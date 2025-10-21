@@ -20,12 +20,6 @@ pipeline {
 
     stages {
 
-        stage('Webhook Test') {
-            steps {
-                echo "If the job triggered automatically after the push, then it worked!"
-            }
-        }
-
         stage('Build JAR') {
             steps {
                 buildJar()
