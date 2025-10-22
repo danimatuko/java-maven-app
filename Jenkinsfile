@@ -5,7 +5,6 @@ library identifier: 'shared-lib@main', retriever: modernSCM(
    remote: 'https://github.com/danimatuko/jenkins-shared-library.git',
    credentialsId: 'github-credentials'])
 
-
 pipeline {
     agent any
 
@@ -15,10 +14,40 @@ pipeline {
 
     parameters {
         string(name: 'IMAGE_NAME', defaultValue: 'danimatuko/demo-app', description: 'Docker image name')
-        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker image tag')
     }
 
     stages {
+
+        stage('Increment Version') {
+            steps {
+                script {
+                    // Increment Maven version
+                    sh '''
+                        mvn build-helper:parse-version versions:set \
+                            -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} \
+                            -DgenerateBackupPoms=false
+                    '''
+
+                    // Read the new Maven version
+                    def newVersion = sh(
+                        script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
+                        returnStdout: true
+                    ).trim()
+
+                    if (!newVersion) {
+                        error("Failed to read project.version from pom.xml")
+                    }
+
+                    env.NEW_VERSION = newVersion
+
+                    // Combine Maven version with Jenkins build number for Docker tag
+                    env.IMAGE_TAG = "${env.NEW_VERSION}-${env.BUILD_NUMBER}"
+
+                    echo "📦 New project version: ${env.NEW_VERSION}"
+                    echo "🐳 Docker image tag: ${env.IMAGE_TAG}"
+                }
+            }
+        }
 
         stage('Build JAR') {
             steps {
@@ -28,7 +57,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dockerBuildImage("${params.IMAGE_NAME}:${params.IMAGE_TAG}")
+                dockerBuildImage("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
             }
         }
 
@@ -40,7 +69,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                dockerPush("${params.IMAGE_NAME}:${params.IMAGE_TAG}")
+                dockerPush("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
             }
         }
 
