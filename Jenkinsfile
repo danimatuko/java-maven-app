@@ -21,12 +21,11 @@ pipeline {
         stage('Increment Version') {
             steps {
                 script {
-                    // Increment Maven version
-                    sh '''
-                        mvn build-helper:parse-version versions:set \
-                            -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} \
-                            -DgenerateBackupPoms=false
-                    '''
+                  // Increment Maven version using escaped variables
+                  sh '''mvn build-helper:parse-version versions:set \
+                    -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} \
+                    -DgenerateBackupPoms=false'''
+
 
                     // Read the new Maven version
                     def newVersion = sh(
