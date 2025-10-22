@@ -21,9 +21,11 @@ pipeline {
       stage('Increment Version') {
         steps {
           script {
-            sh 'mvn build-helper:parse-version versions:set \
-              -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
-              versions:commit'
+            sh '''
+              mvn build-helper:parse-version versions:set \
+              -DnewVersion=${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.nextIncrementalVersion} \
+              versions:commit
+              '''
 
               def newVersion = sh(
                   script: "mvn help:evaluate -Dexpression=project.version -q -DforceStdout",
