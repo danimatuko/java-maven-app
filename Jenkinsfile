@@ -46,7 +46,7 @@ pipeline {
       stage('Build Docker Image') {
         steps {
           script {
-            buildImage("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
+            dockerBuildImage("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
           }
         }
       }
