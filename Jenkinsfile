@@ -1,6 +1,10 @@
 #!/usr/bin/env groovy
 
-def utils
+library identifier: 'shared-lib@main', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'https://github.com/danimatuko/jenkins-shared-library.git',
+   credentialsId: 'github-credentials'])
+
 
 pipeline {
     agent any
@@ -11,14 +15,6 @@ pipeline {
         string(name: 'IMAGE_NAME', defaultValue: 'danimatuko/java-maven-app', description: 'Docker image name')
     }
     stages {
-      stage('Initialize') {
-        steps {
-          script {
-            utils = load 'jenkins-utils.groovy'
-          }
-        }
-      }
-      
       stage('Increment Version') {
         steps {
           script {
@@ -42,7 +38,7 @@ pipeline {
       stage('Build JAR') {
         steps {
           script {
-            utils.buildJar()
+            buildJar()
           }
         }
       }
@@ -50,7 +46,7 @@ pipeline {
       stage('Build Docker Image') {
         steps {
           script {
-            utils.buildImage("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
+            buildImage("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
           }
         }
       }
@@ -58,7 +54,7 @@ pipeline {
       stage('Docker Login') {
         steps {
           script {
-            utils.login()
+            dockerLogin()
           }
         }
       }
@@ -66,7 +62,7 @@ pipeline {
       stage('Push Docker Image') {
         steps {
           script {
-            utils.push("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
+            dockerPush("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
           }
         }
       }
@@ -74,7 +70,7 @@ pipeline {
       stage('Deploy') {
         steps {
           script {
-            utils.deployApp()
+            deployApp()
           }
         }
       }
