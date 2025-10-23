@@ -8,13 +8,12 @@ pipeline {
         maven 'maven-3.9'
     }
     parameters {
-        string(name: 'IMAGE_NAME', defaultValue: 'danimatuko/java-maven-app', description: 'Docker image name')
+        string(name: 'IMAGE_NAME', defaultValue: 'danimatuko/demo-app', description: 'Docker image name')
     }
     stages {
       stage('Initialize') {
         steps {
           script {
-            // Load the external script once and store it in the pipeline variable
             utils = load 'jenkins-utils.groovy'
           }
         }
@@ -43,7 +42,7 @@ pipeline {
       stage('Build JAR') {
         steps {
           script {
-            utils.buildJar(this)
+            utils.buildJar()
           }
         }
       }
@@ -51,7 +50,7 @@ pipeline {
       stage('Build Docker Image') {
         steps {
           script {
-            utils.buildImage(this, "${params.IMAGE_NAME}:${env.IMAGE_TAG}")
+            utils.buildImage("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
           }
         }
       }
@@ -59,7 +58,7 @@ pipeline {
       stage('Docker Login') {
         steps {
           script {
-            utils.login(this)
+            utils.login()
           }
         }
       }
@@ -67,7 +66,7 @@ pipeline {
       stage('Push Docker Image') {
         steps {
           script {
-            utils.push(this, "${params.IMAGE_NAME}:${env.IMAGE_TAG}")
+            utils.push("${params.IMAGE_NAME}:${env.IMAGE_TAG}")
           }
         }
       }
@@ -75,7 +74,7 @@ pipeline {
       stage('Deploy') {
         steps {
           script {
-            utils.deployApp(this)
+            utils.deployApp()
           }
         }
       }
