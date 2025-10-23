@@ -8,7 +8,7 @@ pipeline {
         maven 'maven-3.9'
     }
     parameters {
-        string(name: 'IMAGE_NAME', defaultValue: 'danimatuko/demo-app', description: 'Docker image name')
+        string(name: 'IMAGE_NAME', defaultValue: 'danimatuko/java-maven-app', description: 'Docker image name')
     }
     stages {
       stage('Initialize') {
