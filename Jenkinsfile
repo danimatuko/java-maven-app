@@ -43,7 +43,7 @@ pipeline {
     stage('Commit Version Change') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+          withCredentials([usernamePassword(credentialsId: 'github-pat', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
 
             // Determine branch safely
             def branch = env.GIT_BRANCH ?: 'main'
