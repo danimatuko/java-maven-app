@@ -6,7 +6,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>java-maven-app</artifactId>
-    <version>1.1.423</version>
+    <version>1.1.424</version>
 
     <build>
         <plugins>
