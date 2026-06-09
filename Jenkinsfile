@@ -29,7 +29,7 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
                         sh 'docker build -t "$DOCKER_USER/java-maven-app:latest" .'
-                        sh 'docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"'
+                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
                         sh 'docker push "$DOCKER_USER/java-maven-app:latest"'
                     }
                 }
