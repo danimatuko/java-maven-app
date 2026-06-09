@@ -15,6 +15,14 @@ pipeline {
                 script {
                     echo 'Building the application....'
                     sh 'mvn clean package'
+                }
+            }
+        }
+
+        stage('deploy') {
+            steps {
+                script {
+                    echo 'Deploying the application....'
                     withCredentials([usernamePassword(
                         credentialsId: 'docker-creds',
                         usernameVariable: 'DOCKER_USER',
@@ -24,14 +32,6 @@ pipeline {
                         sh 'docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"'
                         sh 'docker push "$DOCKER_USER/java-maven-app:latest"'
                     }
-                }
-            }
-        }
-
-        stage('deploy') {
-            steps {
-                script {
-                    echo 'Deploying the application....'
                 }
             }
         }
