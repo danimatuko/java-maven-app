@@ -1,11 +1,20 @@
+def utils //Global utils variable → accessible in all stages.
+
 pipeline {
     agent any
     tools { maven 'maven-3.9' }
     stages {
+        stage('init') {
+            steps {
+                script{
+                    utils = load 'jenkins/utils.groovy'
+                }
+            }
+        }
         stage('test') {
             steps {
                 script {
-                    echo 'Testing the application....'
+                    utils.testApp()
                 }
             }
         }
@@ -28,10 +37,10 @@ pipeline {
                         usernameVariable: 'DOCKER_USER',
                         passwordVariable: 'DOCKER_PASS'
                     )]) {
-                        sh 'docker build -t "$DOCKER_USER/java-maven-app:latest" .'
-                        sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                        sh 'docker push "$DOCKER_USER/java-maven-app:latest"'
-                    }
+                            sh 'docker build -t "$DOCKER_USER/java-maven-app:latest" .'
+                            sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
+                            sh 'docker push "$DOCKER_USER/java-maven-app:latest"'
+                        }
                 }
             }
         }
