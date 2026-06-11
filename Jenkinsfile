@@ -28,6 +28,9 @@ pipeline {
         }
 
         stage('deploy') {
+            when {
+                expression { env.BRANCH_NAME == 'main' }
+            }
             steps {
                 script {
                     utils.deploy()
