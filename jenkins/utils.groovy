@@ -4,7 +4,7 @@ def testApp() {
 
 def buildApp() {
     echo 'Building the application....'
-    sh 'mvn clean package'
+    sh 'mvn package'
 }
 
 def deploy() {
