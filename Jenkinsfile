@@ -1,5 +1,3 @@
-def utils //Global utils variable → accessible in all stages.
-
 @Library('shared-lib') _  // 'shared-lib' matches the name in Jenkins config
 
 pipeline {
@@ -7,41 +5,29 @@ pipeline {
     tools { maven 'maven-3.9' }
     stages {
 
-    stage('Test shared library') {
-      steps {
-        hello('Jenkins from jenkins shared-lib')
-      }
-    }
-    stage('init') {
+    stage('test app') {
       steps {
         script {
-          utils = load 'jenkins/utils.groovy'
-        }
-      }
-    }
-    stage('test') {
-      steps {
-        script {
-          utils.testApp()
+          testApp()
         }
       }
     }
 
-    stage('build') {
+    stage('build app') {
       steps {
         script {
-          utils.buildApp()
+          buildApp()
         }
       }
     }
 
-    stage('deploy') {
+    stage('deploy app') {
       when {
         expression { env.BRANCH_NAME == 'main' }
       }
       steps {
         script {
-          utils.deploy()
+          deployApp()
         }
       }
     }
