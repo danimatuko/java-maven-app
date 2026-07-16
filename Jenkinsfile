@@ -16,7 +16,7 @@ pipeline {
     stage('build app') {
       steps {
         script {
-          buildApp("danimatuko/java-maven-app:latest")
+          buildApp()
         }
       }
     }
@@ -27,7 +27,7 @@ pipeline {
       }
       steps {
         script {
-          deployApp()
+          deployApp("danimatuko/java-maven-app:latest")
         }
       }
     }
