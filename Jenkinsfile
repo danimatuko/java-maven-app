@@ -5,6 +5,12 @@ pipeline {
     tools { maven 'maven-3.9' }
     stages {
 
+    stage('test webhook') {
+      steps {
+        echo "Webhook triggered pipeline for ${env.BRANCH_NAME} at ${env.GIT_COMMIT}"
+      }
+    }
+
     stage('test app') {
       steps {
         script {
